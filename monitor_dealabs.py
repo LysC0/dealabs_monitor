@@ -1,18 +1,26 @@
+"""
+Dealabs Monitor
+@LysC0
+"""
+
 from requests_html import HTMLSession
 from bs4 import BeautifulSoup
 import requests
 import json
 from time import strftime
 import time
-import re
 import os 
 
-
 with open ('setup.json', 'r') as f:
+    stock_main = []
     j = json.load(f)
     Range = j['Range']
     Webhook = j['Webhook']
     Master_link = j['Master_link']
+    keyword = j['Keyword']
+
+    for i in keyword :
+        stock_main.append(i)
 
 def found_product(num):
     r = HTMLSession()
@@ -25,7 +33,7 @@ def found_product(num):
             exit()
         
         pat_h = strftime("%H:%M:%S") 
-        time.sleep(1)
+        time.sleep(0.4)
 
         base = r.get(Master_link)
         s = BeautifulSoup(base.text, 'lxml')
@@ -62,7 +70,40 @@ def found_product(num):
             instance(num, x, y, pat_h)
         
 def sender(url, title, link, img, price):
+    stock = []
+    stock.append(title)
+    
+    for i in stock_main : 
+        if i.lower() in title.lower() :
+            title = stock[0]
+            embed = {
+                'title' : f'Monitor dealabs .me /:white_check_mark: Keyword **__{i}__** Found :white_check_mark:',
+                "description" : "- monitor dealabs",
+                "color": 3120166,
+                "fields": [
+                    {"name": "__Title :__", "value": title, "inline": True},
+                    #{"name": "__Price :__", "value": price, "inline": True},
+                    {"name": "__Link :__", "value": link, "inline": True},
+                    {"name": "", "value":"<@441531224557879307>"}
+                ],
+                    
+                    "thumbnail" : {
+                    "url" : img
+                }
+            }  
+            
+            payload = {
+                "content": "",
+                "embeds": [embed]
+            }
 
+            response = requests.post(url, data=json.dumps(payload), headers={"Content-Type": "application/json"})
+
+            if response.status_code == 204:
+                print('\033[1;32m')
+                #print("\033[1;32mWebhook send success.\n")
+            else:
+                print("\033[1;31mWebhook error :", response.status_code)
     embed = {
         'title' : 'Monitor dealabs .me',
         "description" : "- monitor dealabs",
@@ -71,28 +112,23 @@ def sender(url, title, link, img, price):
             {"name": "__Title :__", "value": title, "inline": True},
             #{"name": "__Price :__", "value": price, "inline": True},
             {"name": "__Link :__", "value": link, "inline": True},
-            {"name": "", "value":"<@441531224557879307>"}
-        ],
-        
+        ],           
         "thumbnail" : {
             "url" : img
-        }
-    }  
-    
+            }
+    }      
     payload = {
-        "content": "",
-        "embeds": [embed]
-    }
-
-    response = requests.post(url, data=json.dumps(payload), headers={"Content-Type": "application/json"})
-
+            "content": "",
+            "embeds": [embed]
+        }
+    
+    response = requests.post(url, data=json.dumps(payload), headers={"Content-Type": "application/json"})   
     if response.status_code == 204:
         print('\033[1;32m')
-        #print("\033[1;32mWebhook send success.\n")
-        pass
     else:
         print("\033[1;31mWebhook error :", response.status_code)
 
+            
 def checker_img(url):
     r = HTMLSession().get(url)
     base = r.text
@@ -152,7 +188,8 @@ def control(tr, num_range, found):
         pass
             
 def instance(num_range, tr, found, time):
-    os.system('clear')
+    os.system('cls') #windows clear
+    #os.system('clear') #mac/linux clear
     print('\033[1;34m')
     print(f"""
  __________________________________
@@ -164,8 +201,5 @@ def instance(num_range, tr, found, time):
 |__________________________________|""")
 
 found_product(Range)
-
-#checker_price('https://www.dealabs.com/bons-plans/pc-fixe-ryzen-7-7700-rx-7900xt-20-go-32-go-ram-ddr5-6000-gigabyte-b650-wifi-ssd-nvme-1-to-alim-bequiet-850w-80-gold-2746153')
-
 
 
