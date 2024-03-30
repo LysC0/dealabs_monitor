@@ -2,9 +2,9 @@
 
 ## pip install 
 
-.pip install requests
-.pip install requests_html
-.pip install bs4
+- pip install requests
+- pip install requests_html
+- pip install bs4
 
 ## setup .json file
 
