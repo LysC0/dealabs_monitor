@@ -47,7 +47,6 @@ def found_product(num):
         for result in div :
                     title = result.get('title')
                     href = result.get('href')
-                    #print(f'title : {title}\nlink : {href}\n')
                     break
         
         for i in stock :
@@ -55,7 +54,6 @@ def found_product(num):
                 break
         
         if title in i[0]:
-                #print(f'Waiting product {x}/{num}.', end='\r')
                 stock.append([title, href])
                 x +=1
                 instance(num, x, y, pat_h)
@@ -63,10 +61,8 @@ def found_product(num):
         else :
             stock.append([title, href])
             url = checker_img(href)
-            #price = checker_price(href)
             sender(Webhook, title, href, url, '')  
-            y += 1  
-            #print(f'New product : {title}\n')
+            y += 1
             instance(num, x, y, pat_h)
         
 def sender(url, title, link, img, price):
@@ -82,7 +78,6 @@ def sender(url, title, link, img, price):
                 "color": 3120166,
                 "fields": [
                     {"name": "__Title :__", "value": title, "inline": True},
-                    #{"name": "__Price :__", "value": price, "inline": True},
                     {"name": "__Link :__", "value": link, "inline": True},
                     {"name": "", "value":"<@441531224557879307>"}
                 ],
@@ -101,7 +96,6 @@ def sender(url, title, link, img, price):
 
             if response.status_code == 204:
                 print('\033[1;32m')
-                #print("\033[1;32mWebhook send success.\n")
             else:
                 print("\033[1;31mWebhook error :", response.status_code)
     embed = {
@@ -110,7 +104,6 @@ def sender(url, title, link, img, price):
         "color": 3801229,
         "fields": [
             {"name": "__Title :__", "value": title, "inline": True},
-            #{"name": "__Price :__", "value": price, "inline": True},
             {"name": "__Link :__", "value": link, "inline": True},
         ],           
         "thumbnail" : {
@@ -201,5 +194,13 @@ def instance(num_range, tr, found, time):
 |__________________________________|""")
 
 found_product(Range)
+
+"""
+add feature : 
+. price in webhook
+. proxy 
+. undetectable
+"""
+
 
 
