@@ -139,23 +139,6 @@ def checker_img(url):
                     return r_img
             except TypeError:
                 break
-    
-def checker_price(url):
-    r = HTMLSession()
-    base = r.get(url)
-    base.html.render()
-    print(base)
-
-    s = BeautifulSoup(base.html.html, 'html.parser')
-    print(s)
-    
-    span = s.find('body')
-    
-
-    stock = []
-    for i in span :
-        img = i.find('div', {'id', 'threadDetailPortal'})
-        print(img) 
 
 def control(tr, num_range, found):
     pat = str(f'{tr}/{num_range}')
